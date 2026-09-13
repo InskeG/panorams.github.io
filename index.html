@@ -18,7 +18,7 @@
     <meta property="og:title" content="PanorAMS: Automatic Annotation for Detecting Objects in Urban Context" />
     <meta property="og:url" content="https://panorams.inskegroenen.nl"/>
     <meta property="og:description" content="PanorAMS uses open-source geospatial information to automatically generate bounding boxes in panoramic images of Amsterdam."/>
-    <meta property="og:image" content="{{site.url}}/images/panorams_example_noisy_1color.png"/>
+    <meta property="og:image" content="images/panorams_example_noisy_1color.png"/>
 
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -326,17 +326,17 @@
             d3.select("#object-classes-nav")
                 .on("mouseover", function () {
                     d3.select("#slide-img-left")
-                        .attr("src", "{{site.url}}/images/panorams_example_noisy_class_colors.png")
+                        .attr("src", "images/panorams_example_noisy_class_colors.png")
                     d3.select("#slide-img-right")
-                        .attr("src", "{{site.url}}/images/panorams_example_clean_class_colors.png")
+                        .attr("src", "images/panorams_example_clean_class_colors.png")
                     d3.selectAll(".object-classes")
                         .style("color", "#ff5851");
                 })
                 .on("mouseout", function () {
                     d3.select("#slide-img-left")
-                        .attr("src", ".{{site.url}}/images/panorams_example_noisy_1color.png")
+                        .attr("src", ".images/panorams_example_noisy_1color.png")
                     d3.select("#slide-img-right")
-                        .attr("src", "{{site.url}}/images/panorams_example_clean_1color.png")
+                        .attr("src", "images/panorams_example_clean_1color.png")
                     d3.selectAll(".object-classes")
                         .style("color", "black");
                 })
@@ -885,13 +885,13 @@
             <div class="vertical-text-noisy red-hover"><a id="section-link-noisy" href="#noisy">Noisy</a>
             </div>
             <div class="img-comp-img img-comp-overlay-right">
-                <img src="{{site.url}}/images/panorams_example_clean_1color.png" id="slide-img-right" width="700"
+                <img src="images/panorams_example_clean_1color.png" id="slide-img-right" width="700"
                     height="275" alt="Example of an accurately labeled panoramic image of Amsterdam, part of the PanorAMS-clean dataset">
                 <div class="overlay" id="overlay-clean"></div>
             </div>
             <div class="img-comp-slider"></div>
             <div class="img-comp-img img-comp-overlay-left">
-                <img src="{{site.url}}/images/panorams_example_noisy_1color.png" id="slide-img-left" width="700"
+                <img src="images/panorams_example_noisy_1color.png" id="slide-img-left" width="700"
                     height="275" alt="Example of an automatically labeled panoramic image of Amsterdam, part of the PanorAMS-noisy dataset">
                 <div class="overlay" id="overlay-noisy"></div>
             </div>
@@ -954,7 +954,7 @@
                 <p class="red-hover object-classes" uk-icon="triangle-up" id="object-classes-triangle-up"></p>
             </a>
             <div class="offset-lg-2 offset-md-1 uk-accordion-content col-lg-8 col-md-10 col-sm-12 text-center">
-                <img src="{{site.url}}/images/PanorAMS_dataset_stats_w_size_dist.jpg" alt="Statistics of the PanorAMS-noisy and PanorAMS-clean datasets">
+                <img src="images/PanorAMS_dataset_stats_w_size_dist.jpg" alt="Statistics of the PanorAMS-noisy and PanorAMS-clean datasets">
             </div>
         </li>
     </ul>
@@ -1069,7 +1069,7 @@
         <div class="row">
             <div class="offset-1 col-11">
                 <p class="mr-5">
-                    <img src="{{site.url}}/images/fig2_automatic_labeling_v2.jpg" width="700px"
+                    <img src="images/fig2_automatic_labeling_v2.jpg" width="700px"
                         style="position: relative; float: right; -o-object-fit: contain; object-fit: contain;"
                         alt="Overview of our pipeline to automatically generate noisy bounding box annotations
                         in 360° street level images based on geographic context information.">
@@ -1130,7 +1130,7 @@
         <div class="row">
             <div class="offset-1 col-11">
                 <p class="mr-5">
-                    <img src="{{site.url}}/images/panorams_crowdsourcing_tool.png" width="600px"
+                    <img src="images/panorams_crowdsourcing_tool.png" width="600px"
                         style="position: relative; float: left; -o-object-fit: contain; object-fit: contain; padding-right:10px;"
                         alt="The user interface of our labeling tool for crowd-sourcing accurate bounding box annotations">
 
