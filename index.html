@@ -35,21 +35,740 @@
     <!-- D3 package -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
 
-    <!-- Custom styles for this template -->
-    <link href="../static/css/panorams.css" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.25.21/dist/css/uikit.min.css" />
 
-    <!-- uikit -->
-    <script src="../static/packages/uikit/js/uikit.min.js"></script>
-    <script src="../static/packages/uikit/js/uikit-icons.min.js"></script>
-    <link href="../static/packages/uikit/css/uikit.css" rel="stylesheet" type="text/css">
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.25.21/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.25.21/dist/js/uikit-icons.min.js"></script>
 
     <!-- clipboard package -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 
-    <script src="../static/js/panorams/homepage_functions.js"></script>
     <script>
+        function openExternalPage(url_string) {
+            let a = document.createElement('a');
+            a.target = '_blank';
+            a.href = "https://" + url_string;
+            a.click();
+        }
+
+        function resizeBboxSliderImg() {
+            const width = window.innerWidth;
+
+            if (width < 768) {
+                // screen xs & sm
+
+                var widthImageCols = 10 * (width / 12);
+
+                var scaleFactor = widthImageCols / 700;
+                var heightImg = scaleFactor * 275;
+                var widthImg = widthImageCols;
+
+                d3.select("#noisy-section-nav-stats-lg")
+                    .style("display", "none");
+
+                d3.select("#clean-section-nav-stats-lg")
+                    .style("display", "none");
+
+                d3.select("#noisy-section-nav-stats-sm-md")
+                    .style("display", "block");
+
+                d3.select("#clean-section-nav-stats-sm-md")
+                    .style("display", "block");
+
+                d3.select(".vertical-text-clean")
+                    .style("transform", "translate(" + (widthImg + 35) + "px) rotate(90deg)");
+
+            } else if (width < 992) {
+                // screen md
+
+                var widthImageCols = 10 * (width / 12);
+
+                var scaleFactor = widthImageCols / 700;
+                var heightImg = scaleFactor * 275;
+                var widthImg = widthImageCols;
+
+                d3.select("#noisy-section-nav-stats-lg")
+                    .style("display", "none");
+
+                d3.select("#clean-section-nav-stats-lg")
+                    .style("display", "none");
+
+                d3.select("#noisy-section-nav-stats-sm-md")
+                    .style("display", "block");
+
+                d3.select("#clean-section-nav-stats-sm-md")
+                    .style("display", "block");
+
+                d3.select(".vertical-text-clean")
+                    .style("transform", "translate(" + (widthImg + 35) + "px) rotate(90deg)");
+
+            } else {
+                // screen lg
+
+                // lg-col-6
+                var widthImageCols = 6 * (width / 12);
+
+                if (widthImageCols > 700) {
+                    var widthImg = 700;
+                    var heightImg = 275;
+                } else {
+                    var scaleFactor = widthImageCols / 700;
+                    var heightImg = scaleFactor * 275;
+                    var widthImg = widthImageCols;
+
+                    d3.select(".vertical-text-clean")
+                        .style("transform", "translate(" + (widthImg + 35) + "px) rotate(90deg)");
+                }
+
+                d3.select("#noisy-section-nav-stats-lg")
+                    .style("display", "block");
+
+                d3.select("#clean-section-nav-stats-lg")
+                    .style("display", "block");
+
+                d3.select("#noisy-section-nav-stats-sm-md")
+                    .style("display", "none");
+
+                d3.select("#clean-section-nav-stats-sm-md")
+                    .style("display", "none");
+
+            }
+
+            d3.select("#slide-img-left")
+                .attr("width", widthImg)
+                .attr("height", heightImg);
+
+            d3.select("#slide-img-right")
+                .attr("width", widthImg)
+                .attr("height", heightImg);
+
+            d3.select("#img-slider-container")
+                .style("height", heightImg + 'px');
+
+
+            d3.select("#bboxSliderImgRow")
+                .style("height", heightImg + 'px');
+
+            var x, i;
+            /*find element with an "img-comp-overlay-left" class:*/
+            x = document.getElementsByClassName("img-comp-overlay-left");
+            fitBboxSliderImage(x[0], widthImg, heightImg);
+
+            function fitBboxSliderImage(img, widthImg, heightImg) {
+                var slider = 0;
+                var clicked = 0;
+                /*get the width and height of the img element*/
+                // w = img.offsetWidth;
+                // h = img.offsetHeight;
+                // /*set the width of the img element to 50%:*/
+                img.style.width = (widthImg / 2) + "px";
+
+                slider = document.getElementsByClassName("img-comp-slider")[0]
+
+                /*position the slider in the middle:*/
+                slider.style.top = (heightImg / 2) - (slider.offsetHeight / 2) + "px";
+                slider.style.left = (widthImg / 2) - (slider.offsetWidth / 2) + 13 + "px";
+                /*execute a function when the mouse button is pressed:*/
+                slider.addEventListener("mousedown", slideReady);
+                /*and another function when the mouse button is released:*/
+                window.addEventListener("mouseup", slideFinish);
+                /*or touched (for touch screens:*/
+                slider.addEventListener("touchstart", slideReady);
+                /*and released (for touch screens:*/
+                window.addEventListener("touchend", slideFinish);
+                function slideReady(e) {
+                    /*prevent any other actions that may occur when moving over the image:*/
+                    e.preventDefault();
+                    /*the slider is now clicked and ready to move:*/
+                    clicked = 1;
+                    /*execute a function when the slider is moved:*/
+                    window.addEventListener("mousemove", slideMove);
+                    window.addEventListener("touchmove", slideMove);
+                }
+                function slideFinish() {
+                    /*the slider is no longer clicked:*/
+                    clicked = 0;
+                }
+                function slideMove(e) {
+                    var pos;
+                    /*if the slider is no longer clicked, exit this function:*/
+                    if (clicked == 0) return false;
+                    /*get the cursor's x position:*/
+                    pos = getCursorPos(e)
+                    /*prevent the slider from being positioned outside the image:*/
+                    if (pos < 0) pos = 0;
+                    if (pos > widthImg) pos = widthImg;
+                    /*execute a function that will resize the overlay image according to the cursor:*/
+                    slide(pos);
+                }
+                function getCursorPos(e) {
+                    var a, x = 0;
+                    e = (e.changedTouches) ? e.changedTouches[0] : e;
+                    /*get the x positions of the image:*/
+                    a = img.getBoundingClientRect();
+                    /*calculate the cursor's x coordinate, relative to the image:*/
+                    x = e.pageX - a.left;
+                    /*consider any page scrolling:*/
+                    x = x - window.pageXOffset;
+                    return x;
+                }
+                function slide(x) {
+                    /*resize the image:*/
+                    img.style.width = x + "px";
+                    /*position the slider:*/
+                    slider.style.left = img.offsetWidth - (slider.offsetWidth / 2) + 13 + "px";
+                }
+            }
+        }
+
+        function initDatasetsSectionNav() {
+            d3.select(".vertical-text-noisy")
+                .on("mouseover", function () {
+                    highlightNavItems("noisy");
+                })
+                .on("mouseout", function () {
+                    unhighlightNavItems("noisy");
+                })
+                .on("touchstart", function () {
+                    highlightNavItems("noisy");
+                })
+                .on("touchend", function () {
+                    unhighlightNavItems("noisy");
+                });
+
+            d3.selectAll(".stats-noisy")
+                .on("mouseover", function () {
+                    highlightNavItems("noisy");
+                })
+                .on("mouseout", function () {
+                    unhighlightNavItems("noisy");
+                })
+                .on("touchstart", function () {
+                    highlightNavItems("noisy");
+                })
+                .on("touchend", function () {
+                    unhighlightNavItems("noisy");
+                });
+
+
+            d3.select(".vertical-text-clean")
+                .on("mouseover", function () {
+                    highlightNavItems("clean");
+                })
+                .on("mouseout", function () {
+                    unhighlightNavItems("clean");
+                })
+                .on("touchstart", function () {
+                    highlightNavItems("clean");
+                })
+                .on("touchend", function () {
+                    unhighlightNavItems("clean");
+                });
+            d3.selectAll(".stats-clean")
+                .on("mouseover", function () {
+                    highlightNavItems("clean");
+                })
+                .on("mouseout", function () {
+                    unhighlightNavItems("clean");
+                })
+                .on("touchstart", function () {
+                    highlightNavItems("clean");
+                })
+                .on("touchend", function () {
+                    unhighlightNavItems("clean");
+                });
+
+            function highlightNavItems(datasetName) {
+                if (datasetName == "noisy") {
+                    var nonHighlightedDatasetName = 'clean';
+                } else {
+                    var nonHighlightedDatasetName = 'noisy';
+                }
+                d3.select("#overlay-" + nonHighlightedDatasetName)
+                    .style("display", "block");
+
+                d3.selectAll(".section-link-" + datasetName)
+                    .style("color", "#ff5851");
+
+                d3.select("#section-link-" + datasetName)
+                    .style("color", "#ff5851");
+
+            }
+            function unhighlightNavItems(datasetName) {
+                if (datasetName == "noisy") {
+                    var nonHighlightedDatasetName = 'clean';
+                } else {
+                    var nonHighlightedDatasetName = 'noisy';
+                }
+                d3.select("#overlay-" + nonHighlightedDatasetName)
+                    .style("display", "none");
+
+                d3.selectAll(".section-link-" + datasetName)
+                    .style("color", "black");
+
+                if (datasetName == "noisy") {
+                    d3.select("#section-link-" + datasetName)
+                        .style("color", "#300044");
+                } else {
+                    d3.select("#section-link-" + datasetName)
+                        .style("color", "#e5b900");
+                }
+
+                d3.select("#section-link-" + datasetName + "-in-text")
+                    .style("color", "#ff5851");
+            }
+        }
+
+        function objectClassesInteractivity() {
+            d3.select("#object-classes-triangle-up").style("display", "none");
+            d3.select("#object-classes-nav")
+                .on("mouseover", function () {
+                    d3.select("#slide-img-left")
+                        .attr("src", "../static/panorams/panorams_example_noisy_class_colors.png")
+                    d3.select("#slide-img-right")
+                        .attr("src", "../static/panorams/panorams_example_clean_class_colors.png")
+                    d3.selectAll(".object-classes")
+                        .style("color", "#ff5851");
+                })
+                .on("mouseout", function () {
+                    d3.select("#slide-img-left")
+                        .attr("src", "../static/panorams/panorams_example_noisy_1color.png")
+                    d3.select("#slide-img-right")
+                        .attr("src", "../static/panorams/panorams_example_clean_1color.png")
+                    d3.selectAll(".object-classes")
+                        .style("color", "black");
+                })
+                .on("click", function () {
+                    if (d3.select("#object-classes-triangle-up").style("display") == "none") {
+                        d3.select("#object-classes-triangle-up").style("display", "block");
+                        d3.select("#object-classes-triangle-down").style("display", "none");
+                    } else {
+                        d3.select("#object-classes-triangle-up").style("display", "none");
+                        d3.select("#object-classes-triangle-down").style("display", "block");
+                    }
+                });
+        }
+
+        function copyCitation() {
+            d3.select("#copy-citation-block")
+                .on("mouseover", function () {
+                    d3.select("#copy-citation-text")
+                        .style("color", "#ff5851");
+                })
+                .on("mouseout", function () {
+                    d3.select("#copy-citation-text")
+                        .style("color", "black");
+                });
+        }
     </script>
+
+    <!-- Custom styles for this template -->
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            font-size: .875rem;
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            background-color: white;
+            line-height: 1.8;
+            color: #545353;
+            max-width: 1450px;
+            margin: 0 auto;
+        }
+
+
+        p,
+        text,
+        tspan {
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            color: #545353;
+        }
+
+        h1 {
+            font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            color: #2b2b2b;
+        }
+
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #2b2b2b;
+        }
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: inherit;
+        }
+
+        .url-link {
+            /* font-weight: bold; */
+            color: #ff5851;
+        }
+
+        .url-link:hover {
+            text-decoration: underline;
+            color: #ff5851;
+        }
+
+        .uk-navbar-container {
+            z-index: 9999 !important;
+        }
+
+        .overlay {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: black;
+            opacity: 0.7;
+            top: 0;
+
+        }
+
+        .uk-sticky {
+            z-index: 1100;
+        }
+
+
+        .uk-open>.uk-accordion-title.no-plus:before,
+        .uk-accordion-title.no-plus:before {
+            background-image: none;
+            height: 0;
+        }
+
+        .vertical-text-clean {
+            transform: translate(735px) rotate(90deg);
+            transform-origin: left top 0;
+        }
+
+        #section-link-clean {
+            color: #e5b900;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        #section-link-clean:hover {
+            text-decoration: none;
+            color: #ff5851;
+        }
+
+        .vertical-text-noisy {
+            transform: translate(6px) rotate(-90deg);
+            transform-origin: left bottom 0;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .section-link-noisy,
+        .section-link-clean {
+            color: #2b2b2b;
+        }
+
+        .section-link-noisy.red-color,
+        .section-link-clean.red-color {
+            color: #ff5851;
+        }
+
+        .section-link-clean:hover,
+        .section-link-noisy:hover,
+        .section-link-noisy.red-color:hover,
+        .section-link-clean.red-color:hover {
+            text-decoration: none;
+            color: #ff5851;
+
+        }
+
+        #section-link-noisy {
+            color: #300044;
+            font-size: 1.5rem;
+        }
+
+        #section-link-noisy:hover {
+            text-decoration: none;
+            color: #ff5851;
+        }
+
+        .line-before:before,
+        .line-after:after {
+            background-color: #000;
+            content: "";
+            display: inline-block;
+            height: 1px;
+            position: relative;
+            vertical-align: middle;
+            width: 50%;
+        }
+
+        .line-before.w-55:before,
+        .line-after.w-55:after {
+            width: 55%;
+        }
+
+        .line-before.red:before {
+            background-color: #ff5851;
+        }
+
+        .line-after.red:after {
+            background-color: #ff5851;
+        }
+
+        .line-before:before {
+            right: 0.5em;
+            margin-left: -50%;
+        }
+
+        .line-after:after {
+            left: 0.5em;
+            margin-right: -50%;
+        }
+
+        .image-size {
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .font-lighter {
+            font-weight: lighter;
+        }
+
+        .no-fill {
+            fill: none;
+        }
+
+        .purple-bg {
+            background-color: #300044;
+        }
+
+        .purple-fill {
+            fill: #300044;
+        }
+
+        .purple-stroke {
+            stroke: #300044;
+            stroke-miterlimit: 10;
+            stroke-width: 3px;
+        }
+
+        .purple-color {
+            color: #300044;
+        }
+
+        .red-hover:hover {
+            color: #ff5851;
+            cursor: pointer;
+        }
+
+        .red-fill {
+            fill: #ff5851;
+        }
+
+        .red-color {
+            color: #ff5851;
+        }
+
+
+        .yellow-fill {
+            fill: #e5b900;
+        }
+
+        .yellow-color {
+            color: #e5b900;
+        }
+
+
+        .lightgrey-fill {
+            fill: #e6e6e6;
+        }
+
+        .white-fill {
+            fill: #fff;
+        }
+
+        .lightgrey-color {
+            color: #e6e6e6;
+        }
+
+        .isolate {
+            isolation: isolate;
+        }
+
+        .logo-ams {
+            font-size: 80px;
+            font-family: Helvetica;
+        }
+
+        .logo-panor {
+            font-size: 59px;
+            font-family: Montserrat-Regular, Montserrat;
+        }
+
+        .logo-p {
+            letter-spacing: -0.01em;
+        }
+
+        .logo-n {
+            letter-spacing: 0em;
+        }
+
+        .clip-rect {
+            clip-path: url(#clipRect);
+        }
+
+        #main-content {
+            min-width: 320;
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            /* margin-left: 15px;
+            margin-right: 15px; */
+            /* margin-top: 10px;
+            margin-bottom: 10px; */
+        }
+
+        .clippath-logo {
+            fill: none;
+        }
+
+        .logo-darkgrey {
+            fill: #2b2b2b;
+        }
+
+        .logo-red {
+            fill: #ff5851;
+        }
+
+        .text-logo {
+            font-size: 59px;
+            font-family: Montserrat-Regular, Montserrat;
+        }
+
+        .menu-poly {
+            fill: #e0e0e0;
+        }
+
+        .menu-poly:hover {
+            fill: #ff5851
+        }
+
+        /* br {
+            display: block;
+            margin: 5px;
+        } */
+
+        /* width */
+        /* ::-webkit-scrollbar {
+        width: 10px;
+        outline: 1px solid #ff5851;
+        } */
+
+        /* Track */
+        #article-container::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 10px black;
+            border-radius: 0px;
+            background-color: grey;
+        }
+
+        /* Handle */
+        #article-container::-webkit-scrollbar-thumb {
+            background: #ff5851;
+        }
+
+        /* Handle on hover */
+        #article-container::-webkit-scrollbar-thumb:hover {
+            background: #ff5851;
+            cursor: pointer;
+            /* border: 2px solid #ceeb50; */
+        }
+
+
+
+        .img-comp-container {
+            position: relative;
+            /* height: 275px; */
+            width: auto;
+        }
+
+        .img-comp-img {
+            position: absolute;
+            width: auto;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .img-comp-img img {
+            display: block;
+            vertical-align: middle;
+            height: none;
+            max-width: none;
+        }
+
+
+        .img-comp-slider {
+            position: absolute;
+            z-index: 9;
+            cursor: ew-resize;
+            width: 30px;
+            height: 30px;
+            background-color: #ff5851;
+            border-radius: 50%;
+            left: calc(50% - 15px);
+            top: calc(50% + 30px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .img-comp-slider:after {
+            content: '';
+            padding: 3px;
+            display: inline-block;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(-45deg);
+        }
+
+        .img-comp-slider:before {
+            content: '';
+            padding: 3px;
+            display: inline-block;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(135deg);
+        }
+
+
+        .img-comp-overlay-left:after {
+            border-right: 3px solid #ff5851;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            bottom: 0;
+            top: 0;
+            content: '';
+        }
+
+        .img-comp-overlay-right:after {
+            border-left: 3px solid #ff5851;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            bottom: 0;
+            top: 0;
+            content: '';
+        }
+    </style>
 </head>
 
 <body>
